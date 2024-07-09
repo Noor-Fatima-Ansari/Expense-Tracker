@@ -192,45 +192,41 @@ class _HomeState extends State<Home> {
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shadowColor: Colors.grey,
-                          minimumSize: Size(90, 50),
-                          backgroundColor: Colors.teal,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children:[
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shadowColor: Colors.grey,
+                            minimumSize: Size(90, 50),
+                            backgroundColor: Colors.teal,
+                          ),
+                          onPressed: () {
+                            if (nameController.text.isNotEmpty &&
+                                amountController.text.isNotEmpty &&
+                                datePicker != null) {
+                              final expense = Expense(
+                                name: nameController.text,
+                                amount: amountController.text,
+                                date: datePicker!,
+                                category: selected!,
+                              );
+                              setState(() {
+                                expenses.add(expense);
+                              });
+
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Please fill all fields')),
+                              );
+                            }
+                          },
+                          child: Text('Save Details',
+                              style: TextStyle(color: Colors.white)),
                         ),
-                        onPressed: () {
-                          if (nameController.text.isNotEmpty &&
-                              amountController.text.isNotEmpty &&
-                              datePicker != null) {
-                            final expense = Expense(
-                              name: nameController.text,
-                              amount: amountController.text,
-                              date: datePicker!,
-                              category: selected!,
-                            );
-                            setState(() {
-                              expenses.add(expense);
-                            });
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Expense Added')),
-                            );
-
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Please fill all fields')),
-                            );
-                          }
-                        },
-                        child: Text('Save Details',
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                      SizedBox(width: 15),
-                      ElevatedButton(
-                        onPressed: () {
+                        SizedBox(width: 15),
+                        ElevatedButton(onPressed: (){
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -238,14 +234,15 @@ class _HomeState extends State<Home> {
                             ),
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
-                          shadowColor: Colors.grey,
-                          minimumSize: Size(90, 50),
+
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal,
+                            shadowColor: Colors.grey,
+                            minimumSize: Size(90, 50),
+                          ),
+                          child: Text('All expenses',style:TextStyle(color: Colors.white)),
                         ),
-                        child: Text('All expenses', style: TextStyle(color: Colors.white)),
-                      ),
-                    ],
+                      ]
                   ),
                 ),
               ],

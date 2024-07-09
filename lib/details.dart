@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'Edit.dart';
 import 'Home.dart';
 import 'infoPage.dart';
 import 'model.dart';
 
-class Details extends StatelessWidget {
+
+class Details extends StatefulWidget {
   final List<Expense> expenses;
   Details({required this.expenses});
 
+  @override
+  _DetailsState createState() => _DetailsState();
+}
+
+class _DetailsState extends State<Details> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,9 +25,9 @@ class Details extends StatelessWidget {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: expenses.length,
+              itemCount: widget.expenses.length,
               itemBuilder: (context, index) {
-                final expense = expenses[index];
+                final expense = widget.expenses[index];
                 return Card(
                   color: Colors.teal.withOpacity(0.1),
                   child: Padding(
@@ -31,8 +38,16 @@ class Details extends StatelessWidget {
                           right: 1,
                           top: 0,
                           child: InkWell(
-                            onTap:(){
-
+                            onTap: () async {
+                              final updatedExpense = await showDialog<Expense>(
+                                context: context,
+                                builder: (context) => EditExpenseDialog(expense: expense),
+                              );
+                              if (updatedExpense != null) {
+                                setState(() {
+                                  widget.expenses[index] = updatedExpense;
+                                });
+                              }
                             },
                             child: Icon(
                               Icons.edit,
@@ -52,6 +67,7 @@ class Details extends StatelessWidget {
                             Text('Amount: ${expense.amount}',
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 15)),
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -77,9 +93,9 @@ class Details extends StatelessWidget {
                                   icon: Icon(Icons.delete,
                                       size: 28, color: Colors.red),
                                   onPressed: () {
-                                    // Deleting expense
-                                    expenses.removeAt(index);
-                                    (context as Element).reassemble();
+                                    setState(() {
+                                      widget.expenses.removeAt(index);
+                                    });
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text('Expense Deleted')),
                                     );
